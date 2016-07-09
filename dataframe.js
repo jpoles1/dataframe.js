@@ -1,14 +1,18 @@
-var _ = require("lodash")
+var Lazy = require("lazy.js")
 var series = function(df, colname){
-  var series_data = df.data_values[colname]
-  var series_length = _.keys(series_data).length
+  var series_data = Lazy(df.data_values[colname])
+  var series_length = series_data.size()
   return {
     //Average
-    mean: () => _(series_data).values().mean(),
+    mean: () => {
+      return series_data.values().sum()/series_length
+    },
     //Standard Deviation
     sd: function(){
       var series_mean = this.mean()
-      var variance = _.reduce(series_data, (series_val, accum) => accum+(series_mean-series_val)^2, 0)
+      var variance = series_data.reduce((series_val, accum) => {
+        return accum+(series_mean-series_val)^2
+      }, 0)
       var sd = Math.sqrt(variance)
       return(sd)
     },
@@ -24,12 +28,12 @@ var dataframe = function(data_array, id_var){
   if(id_var==null){
     id_var = "id"
   }
-  _.reduce(data_array, (first_row, row, row_num) => {
+  Lazy(data_array).reduce((first_row, row, row_num) => {
     var id_val = row[id_var];
     if(id_val == null){
       throw "Invalid ID value for row "+row_num
     }
-    _.forEach(row, (col_val, col_name) => {
+    Lazy(row).forEach((col_val, col_name) => {
       if(frame_data[col_name]==null){
         if(first_row){
           frame_data[col_name] = {}
@@ -42,15 +46,6 @@ var dataframe = function(data_array, id_var){
     })
     return 0;
   }, 1)
-  //Type checking?
-  /*_.each(frame_data, (column, col_name)  => {
-    return _.reduce(column, (col_item, prev_type) => {
-      if(prev_type==null){
-        return typeof(col_item)
-      }
-      return prev_type==typeof(col_item)
-    }, undefined)
-  })*/
   var frame = {
     data_values: frame_data,
     $: function(colname){
