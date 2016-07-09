@@ -4,7 +4,8 @@
   "description": "A Small Library Built To Have data.table-like functionality (selecting, filtering, subsetting, aggregating)",
   "main": "dataframe.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon dataframe.js",
+    "test": "mocha testing/test.js"
   },
   "author": "",
   "license": "ISC",

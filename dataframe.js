@@ -1,28 +1,28 @@
 var Lazy = require("lazy.js")
-var series = function(df, colname){
-  var series_data = Lazy(df.data_values[colname])
-  var series_length = series_data.size()
-  return {
-    //Average
-    mean: () => {
-      return series_data.values().sum()/series_length
-    },
-    //Standard Deviation
-    sd: function(){
-      var series_mean = this.mean()
-      var variance = series_data.reduce((series_val, accum) => {
-        return accum+(series_mean-series_val)^2
-      }, 0)
-      var sd = Math.sqrt(variance)
-      return(sd)
-    },
-    //Standard Error
-    se: function(){
-      return this.sd()/Math.sqrt(series_length)
+module.exports = function(data_array, id_var){
+  var series = function(df, colname){
+    var series_data = Lazy(df.data_values[colname])
+    var series_length = series_data.size()
+    return {
+      //Average
+      mean: () => {
+        return series_data.values().sum()/series_length
+      },
+      //Standard Deviation
+      sd: function(){
+        var series_mean = this.mean()
+        var variance = series_data.reduce((series_val, accum) => {
+          return accum+(series_mean-series_val)^2
+        }, 0)
+        var sd = Math.sqrt(variance)
+        return(sd)
+      },
+      //Standard Error
+      se: function(){
+        return this.sd()/Math.sqrt(series_length)
+      }
     }
   }
-}
-var dataframe = function(data_array, id_var){
   var frame_data = {};
   //Gotta make sure there are not repeat ids (otherwise we throw an error)
   if(id_var==null){
@@ -54,9 +54,3 @@ var dataframe = function(data_array, id_var){
   }
   return frame;
 }
-var test_data = [{id: 1, name: "Jordan", age: 20}, {id: 2, name: "Jillian", age: 17}]
-var test_df = dataframe(test_data)
-var age_series = test_df.$("age")
-console.log("Mean:", age_series.mean())
-console.log("SD:", age_series.sd())
-console.log("SE:", age_series.se())
