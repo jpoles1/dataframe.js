@@ -6,4 +6,9 @@ describe("Dataframe Functionality", function(){
     console.log(test_df)
     done();
   })
+  it("Allows the user to create a dataframe using an ill-formatted object", (done)=>{
+    var test_df = df(invalid_data)
+    console.log(test_df)
+    done();
+  })
 })

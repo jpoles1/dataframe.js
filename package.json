@@ -5,7 +5,8 @@
   "main": "dataframe.js",
   "scripts": {
     "start": "nodemon dataframe.js",
-    "test": "mocha testing/test.js"
+    "test": "mocha testing/test.js",
+    "bundle": "browserify dataframe.js -o dist/bundle.js && cp dataframe.js dist/dataframe.js"
   },
   "author": "",
   "license": "ISC",
@@ -13,6 +14,7 @@
     "lazy.js": "^0.4.2"
   },
   "devDependencies": {
+    "browserify": "^13.0.1",
     "mocha": "^2.5.3",
     "nodemon": "^1.9.2"
   }

@@ -9,4 +9,12 @@ describe("Series Functionality", function(){
     console.log("SE:", age_series.se())
     done()
   })
+  it("Allows the user to run summary statistics on a ill-formatted series", (done)=>{
+    var test_df = df(invalid_data)
+    var age_series = test_df.$("age")
+    console.log("Mean:", age_series.mean())
+    console.log("SD:", age_series.sd())
+    console.log("SE:", age_series.se())
+    done()
+  })
 })
