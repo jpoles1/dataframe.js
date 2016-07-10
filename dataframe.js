@@ -2,13 +2,19 @@ var Lazy = require("lazy.js")
 module.exports = function(data_array, id_var){
   var series = function(df, colname){
     var series_data = Lazy(df.data_values[colname])
-    var series_length = series_data.size()
+    var series_length = series_data.size();
+    if(series_length  < 1){
+      throw "Request for Empty Series"
+    }
     return {
+      series_data,
       //Average
+      //mean :: [numeric] -> numeric
       mean: () => {
         return series_data.values().sum()/series_length
       },
       //Standard Deviation
+      //sd :: [numeric] -> numeric
       sd: function(){
         var series_mean = this.mean()
         var variance = series_data.reduce((series_val, accum) => {
@@ -18,6 +24,7 @@ module.exports = function(data_array, id_var){
         return(sd)
       },
       //Standard Error
+      //se :: [numeric] -> numeric
       se: function(){
         return this.sd()/Math.sqrt(series_length)
       }
@@ -47,9 +54,20 @@ module.exports = function(data_array, id_var){
     return 0;
   }, 1)
   var frame = {
+    id_var,
+    data_array,
     data_values: frame_data,
+    //aggregate :: String -> Series
     $: function(colname){
       return series(this, colname)
+    },
+    //aggregate :: ([a] -> b) -> String -> [b]
+    aggregate: function(agg_func, by){
+      var by_groups = this.$(by).series_data.values().uniq()
+      return by_groups.map((group, row_num) => {
+        var group_data = this.data_array.filter((row) => row[by] == group);
+        return {id: row_num, group, aggregated: agg_func(group_data)}
+      }).toArray()
     }
   }
   return frame;
