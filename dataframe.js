@@ -8,13 +8,21 @@ module.exports = function(data_array, id_var){
     }
     return {
       series_data,
+      //min :: [Numeric] -> Numeric
+      min: () => {
+        //minimum function
+      },
+      //max :: [Numeric] -> Numeric
+      max: () => {
+        //maximum function
+      },
       //Average
-      //mean :: [numeric] -> numeric
+      //mean :: [md5(resp)] -> md5(resp)
       mean: () => {
         return series_data.values().sum()/series_length
       },
       //Standard Deviation
-      //sd :: [numeric] -> numeric
+      //sd :: [Numeric] -> Numeric
       sd: function(){
         var series_mean = this.mean()
         var variance = series_data.reduce((series_val, accum) => {
@@ -24,7 +32,7 @@ module.exports = function(data_array, id_var){
         return(sd)
       },
       //Standard Error
-      //se :: [numeric] -> numeric
+      //se :: [Numeric] -> Numeric
       se: function(){
         return this.sd()/Math.sqrt(series_length)
       }
