@@ -63,6 +63,9 @@ module.exports = function(data_array, id_var){
     },
     //aggregate :: ([a] -> b) -> String -> [b]
     aggregate: function(agg_func, by){
+      if(by==null){
+        return {id: 0, aggregated: agg_func(this.data_array)}
+      }
       var by_groups = this.$(by).series_data.values().uniq()
       return by_groups.map((group, row_num) => {
         var group_data = this.data_array.filter((row) => row[by] == group);
