@@ -69,6 +69,19 @@ module.exports = function(data_array, id_var){
     $: function(colname){
       return series(this, colname)
     },
+    //aggregate :: Integer -> Data Array
+    head: function(nrows){
+      if(!(nrows && parseInt(nrows))){
+        nrows = 5;
+      }
+      return this.data_array.slice(0,nrows-1)
+    },
+    tail: function(nrows){
+      if(!(nrows && parseInt(nrows))){
+        nrows = 5;
+      }
+      return this.data_array.slice(-nrows)
+    },
     //aggregate :: ([a] -> b) -> String -> [b]
     aggregate: function(agg_func, by){
       if(by==null){

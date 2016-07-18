@@ -12,19 +12,23 @@ describe("Dataframe Functionality", function(){
     console.log(test_df)
     done();
   })
+  it("Fails to create a frame with duplicate ids")
   it("Allows the user to aggregate a table", (done)=>{
     var test_df = df(big_test_data);
     var agg_mean = test_df.aggregate((agg_series) => {
       agg_df = df(agg_series)
       return agg_df.$("age").mean()
     }, "group")
-    console.log(agg_mean)
     var overall_mean = test_df.aggregate((agg_series) => {
       agg_df = df(agg_series)
       return agg_df.$("age").mean()
     }, null)
-    console.log(overall_mean["aggregated"], test_df.$("age").mean())
-    assert(overall_mean == test_df.$("age").mean())
     done()
+  })
+  it("Gets the head of the dataframe", (done) => {
+    var test_df = df(test_data)
+    var head =  test_df.head()
+    console.log(head)
+    //assert.equal(head, 5)
   })
 })
